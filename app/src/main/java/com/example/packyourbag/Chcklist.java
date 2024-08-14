@@ -11,12 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -89,76 +89,66 @@ public class Chcklist extends AppCompatActivity {
         Intent intent=new Intent(this, Chcklist.class);
         AppData appData=new AppData(database,this);
 
-        switch (item.getItemId()){
-            case R.id.btnMySelection:
-                intent.putExtra(MyConstants.HEADER_SMALL,MyConstants.MY_SELECTIONS);
-                intent.putExtra(MyConstants.SHOW_SMALL,MyConstants.FALSE_STRING);
-                startActivityForResult(intent,101);
-                return true;
-
-            case R.id.btnCustomList:
-                intent.putExtra(MyConstants.HEADER_SMALL,MyConstants.MY_LIST_CAMEL_CASE);
-                intent.putExtra(MyConstants.SHOW_SMALL,MyConstants.TRUE_STRING);
-                startActivity(intent);
-                return true;
-
-            case R.id.btnDeleteDefault:
-                new AlertDialog.Builder(this)
-                        .setTitle("Delete default data")
-                        .setMessage("Are you sure?\n\nAs this will delete the data provided by(Pack Your Bag)while instailling.")
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                appData.persistDataByCategory(header,true);
-                                itemsList=database.mainDao().getAll(header);
-                                updateRecycler(itemsList);
-
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).setIcon(R.drawable.warning)
-                        .show();
-                return true;
-
-
-            case R.id.btnReset:
-                new AlertDialog.Builder(this)
-                        .setTitle("Reset to default")
-                        .setMessage("Are you sure?\n\nAs this will load the default data provided by(pack your Bag)"+"and will delete the custom data you have added in("+header+")")
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                appData.persistDataByCategory(header,false);
-                                itemsList=database.mainDao().getAll(header);
-                                updateRecycler(itemsList);
-
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).setIcon(R.drawable.warning)
-                        .show();
-                return true;
-
-            case R.id.btnAboutUs:
-                intent=new Intent(this,AboutUs.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.btnExit:
-                this.finishAffinity();
-                Toast.makeText(this, "Pack your bag|\nExit completed.", Toast.LENGTH_SHORT).show();
-                return true;
-
-            default:
-                return  super.onOptionsItemSelected(item);
-
+        int id = item.getItemId();
+        if (id == R.id.btnMySelection){
+            intent.putExtra(MyConstants.HEADER_SMALL,MyConstants.MY_SELECTIONS);
+            intent.putExtra(MyConstants.SHOW_SMALL,MyConstants.FALSE_STRING);
+            startActivityForResult(intent,101);
         }
+        else if (id == R.id.btnCustomList) {
+            intent.putExtra(MyConstants.HEADER_SMALL,MyConstants.MY_LIST_CAMEL_CASE);
+            intent.putExtra(MyConstants.SHOW_SMALL,MyConstants.TRUE_STRING);
+            startActivity(intent);
+        }
+        else if (id == R.id.btnDeleteDefault) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete default data")
+                    .setMessage("Are you sure?\n\nAs this will delete the data provided by(Pack Your Bag)while instailling.")
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            appData.persistDataByCategory(header,true);
+                            itemsList=database.mainDao().getAll(header);
+                            updateRecycler(itemsList);
+
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setIcon(R.drawable.warning)
+                    .show();
+        }
+        else if (id == R.id.btnReset) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Reset to default")
+                    .setMessage("Are you sure?\n\nAs this will load the default data provided by(pack your Bag)"+"and will delete the custom data you have added in("+header+")")
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            appData.persistDataByCategory(header,false);
+                            itemsList=database.mainDao().getAll(header);
+                            updateRecycler(itemsList);
+
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setIcon(R.drawable.warning)
+                    .show();
+        }
+        else if (id == R.id.btnAboutUs) {
+            intent=new Intent(this,AboutUs.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.btnExit) {
+            this.finishAffinity();
+            Toast.makeText(this, "Pack your bag|\nExit completed.", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     @Override
